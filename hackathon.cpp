@@ -38,32 +38,46 @@ namespace hackthon {
         require_auth(client);
         auto req_itr = _requests.find(id);
         eosio_assert(req_itr != _requests.end(), "can not find request");
-        eosio_assert(req_itr->status!=1,"request has not been finished processing.");
-        //TODO get rewards
+        eosio_assert(req_itr->status != 1, "request has not been finished processing.");
+        eosio_assert(req_itr->status != 2, "request was rejected");
+        eosio_assert(req_itr->status != 4, "rewards have been claimed");
+
+        INLINE_ACTION_SENDER(eosio::token, transfer)(N(eosio.token), {_self, N(active)},
+                                                     {_self, client, asset(100000), "rewards for client"});
+        auto pe = req_itr->processed_experts;
+        for (auto const &expert: pe) {
+            INLINE_ACTION_SENDER(eosio::token, transfer)(N(eosio.token), {_self, N(active)},
+                                                         {_self, expert, asset(10000), "rewards for expert"});
+        }
     }
 
-    void biocoin::verify(account_name expert, uint64_t id, uint32_t result) {
+    void biocoin::verify(account_name expert, uint64_t id, uint32_t result, string sample_name, string sample_category,
+                         string remark) {
         require_auth(expert);
         auto req_itr = _requests.find(id);
         eosio_assert(req_itr != _requests.end(), "can not find request");
         eosio_assert(req_itr->status == 1, "request has finished processing");
 
+        note note = {expert, sample_name, sample_category, remark};
+
         _requests.modify(req_itr, _self, [&](auto &r) {
             auto ae = r.assigned_experts;
-            auto assign_expert_itr = find(ae.begin(),ae.end(),expert);
+            auto assign_expert_itr = find(ae.begin(), ae.end(), expert);
             eosio_assert(assign_expert_itr != ae.end(), "not an assigned expert");
             ae.erase(assign_expert_itr);
             r.assigned_experts = ae;
 
             auto pe = r.processed_experts;
-            auto processed_expert_itr = find(pe.begin(),pe.end(),expert);
+            auto processed_expert_itr = find(pe.begin(), pe.end(), expert);
             eosio_assert(processed_expert_itr == pe.end(), "you have processed the request");
 
             r.weight += result;
             r.processed_expert_num++;
             r.processed_experts.emplace_back(expert);
 
-            if (r.processed_expert_num == r.assigned_expert_num && r.weight >= r.target_weight) {
+            r.expert_notes.emplace_back(note);
+
+            if ( r.weight >= r.target_weight) {
                 r.status = 3;
             } else if (r.processed_expert_num == r.assigned_expert_num && r.weight < r.target_weight) {
                 r.status = 2;

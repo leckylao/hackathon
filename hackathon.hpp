@@ -13,6 +13,13 @@ namespace hackthon {
 
     class biocoin : public contract {
     private:
+        struct note {
+            account_name expert;
+            string sample_name;
+            string sample_category;
+            string remark;
+        };
+
         //@abi table
         struct request {
             uint64_t  id;
@@ -30,13 +37,14 @@ namespace hackthon {
             vector<account_name> assigned_experts;
             vector<account_name> processed_experts;
 
+            vector<note> expert_notes;
 
-            uint32_t status; //1 processing  , 2 rejected , 3 approved
+            uint32_t status; //1 processing  , 2 rejected , 3 approved , 4 rewards claimed
 
             uint64_t primary_key() const { return id; }
 
             EOSLIB_SERIALIZE(request, (id)(user_id)(images)(longitude)(latitude)(sample_name)(sample_category)
-                    (weight)(target_weight)(assigned_expert_num)(processed_expert_num)(assigned_experts)(processed_experts)(status)
+                    (weight)(target_weight)(assigned_expert_num)(processed_expert_num)(assigned_experts)(processed_experts)(expert_notes)(status)
             )
         };
         typedef multi_index<N(request), request> request_table;
@@ -53,7 +61,7 @@ namespace hackthon {
         void check(account_name client, uint64_t id);
 
         //@abi action
-        void verify(account_name expert, uint64_t id, uint32_t result);
+        void verify(account_name expert, uint64_t id, uint32_t result, string sample_name, string sample_category, string remark);
     };
 
 }

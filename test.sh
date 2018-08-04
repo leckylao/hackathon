@@ -6,7 +6,7 @@ set -x
 #contract=testnethhhhh
 #remote="-u http://47.75.115.225:8888"
 
-contract=hackathon114
+contract=hackathon115
 remote=""
 
 eosiocpp -g hackathon.abi hackathon.hpp
@@ -37,10 +37,10 @@ cleos ${remote} set contract ${contract} . hackathon.wast hackathon.abi -p ${con
 #cleos -u http://47.75.115.225:8888 system newaccount eosio testnetbbbbb EOS4v9UCqsPxKkfm267Q1xJbuE6KRbrXLamGQpo45ZS5xfJqMkaDP EOS4v9UCqsPxKkfm267Q1xJbuE6KRbrXLamGQpo45ZS5xfJqMkaDP --stake-cpu "1000 EOS" --stake-net "1000 EOS" --buy-ram "1000 EOS" -p eosio
 #cleos -u http://47.75.115.225:8888 transfer eosio testnetbbbbb "100 EOS" "red packet" -p eosio
 
-#cleos push action eosio updateauth '["localtest111","active","owner",{"threshold":1,"keys":[{"key":"EOS4v9UCqsPxKkfm267Q1xJbuE6KRbrXLamGQpo45ZS5xfJqMkaDP","weight":1}],"waits":[],"accounts":[{"weight":1,"permission":{"actor":"localtest111","permission":"eosio.code"}}]}]' -p localtest111
 #cleos push action eosio updateauth '["localtest444","active","owner",{"threshold":1,"keys":[{"key":"EOS4v9UCqsPxKkfm267Q1xJbuE6KRbrXLamGQpo45ZS5xfJqMkaDP","weight":1}],"waits":[],"accounts":[{"weight":1,"permission":{"actor":"localtest444","permission":"eosio.code"}}]}]' -p localtest444
 #cleos -u http://47.75.115.225:8888 push action eosio updateauth '["testnetggggg","active","owner",{"threshold":1,"keys":[{"key":"EOS4v9UCqsPxKkfm267Q1xJbuE6KRbrXLamGQpo45ZS5xfJqMkaDP","weight":1}],"waits":[],"accounts":[{"weight":1,"permission":{"actor":"testnetggggg","permission":"eosio.code"}}]}]' -p testnetggggg
 
 #while true; do cleos -u http://47.75.115.225:8888 push action testnetggggg dividepool '{"round_id":8}' -p alice1111111; sleep 1; done
 
 
+cleos push action eosio updateauth '["hackathon115","active","owner",{"threshold":1,"keys":[{"key":"EOS66BM6ghtyojnfmZKgGX9kADxVsbpPii65jCqaCPfD2cWYvvioS","weight":1}],"waits":[],"accounts":[{"weight":1,"permission":{"actor":"hackathon115","permission":"eosio.code"}}]}]' -p hackathon115
