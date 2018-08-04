@@ -56,14 +56,13 @@ namespace hackthon {
         request_table _requests;
 
 
+        void claim(account_name client, uint64_t id);
+
     public:
         explicit biocoin(account_name self);
 
         //@abi action
         void submit(account_name user_id, vector<string> images, double longitude, double latitude,string sample_name,string sample_category );
-
-        //@abi action
-        void check(account_name client, uint64_t id);
 
         //@abi action
         void verify(account_name expert, uint64_t id, uint32_t result, string sample_name, string sample_category, string remark);
@@ -72,4 +71,4 @@ namespace hackthon {
 }
 
 
-EOSIO_ABI(hackthon::biocoin, (submit)(check)(verify))
+EOSIO_ABI(hackthon::biocoin, (submit)(verify))

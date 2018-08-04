@@ -34,14 +34,13 @@ namespace hackthon {
         });
     }
 
-    void biocoin::check(account_name client, uint64_t id) {
-        require_auth(client);
+    void biocoin::claim(account_name client, uint64_t id) {
         auto req_itr = _requests.find(id);
         eosio_assert(req_itr != _requests.end(), "can not find request");
-        eosio_assert(req_itr->status != 1, "request has not been finished processing.");
-        eosio_assert(req_itr->status != 2, "request was rejected");
-        eosio_assert(req_itr->status != 4, "rewards have been claimed");
-        eosio_assert(req_itr->status == 3, "rewards can not be claimed");
+//        eosio_assert(req_itr->status != 1, "request has not been finished processing.");
+//        eosio_assert(req_itr->status != 2, "request was rejected");
+//        eosio_assert(req_itr->status != 4, "rewards have been claimed");
+//        eosio_assert(req_itr->status == 3, "rewards can not be claimed");
 
         _requests.modify(req_itr, _self, [&](auto &r) {
             auto en = req_itr->expert_notes;
@@ -70,7 +69,7 @@ namespace hackthon {
                     currentMax = it->second;
                 }
             }
-
+            r.status = 4;
             r.final_name = final_name;
             r.final_category = final_category;
 
@@ -114,6 +113,8 @@ namespace hackthon {
 
             if (r.weight >= r.target_weight) {
                 r.status = 3;
+                claim(r.user_id,r.id);
+
             } else if (r.processed_expert_num == r.assigned_expert_num && r.weight < r.target_weight) {
                 r.status = 2;
             }

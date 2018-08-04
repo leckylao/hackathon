@@ -5,7 +5,7 @@
 
 set -e
 set -x
-contract=hackathon222
+contract=hackathon223
 remote=""
 
 cleos system newaccount eosio ${contract} EOS66BM6ghtyojnfmZKgGX9kADxVsbpPii65jCqaCPfD2cWYvvioS EOS66BM6ghtyojnfmZKgGX9kADxVsbpPii65jCqaCPfD2cWYvvioS --stake-net "100 EOS" --stake-cpu "100 EOS" --buy-ram-kbytes 1000 -p eosio
