@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-contract=hackathon115
+contract=hackathon222
 
 
 cleos push action ${contract} check '

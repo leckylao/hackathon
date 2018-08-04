@@ -15,6 +15,7 @@ namespace hackthon {
     private:
         struct note {
             account_name expert;
+            uint32_t result;
             string sample_name;
             string sample_category;
             string remark;
@@ -39,12 +40,16 @@ namespace hackthon {
 
             vector<note> expert_notes;
 
+            string final_name;
+            string final_category;
+
             uint32_t status; //1 processing  , 2 rejected , 3 approved , 4 rewards claimed
 
             uint64_t primary_key() const { return id; }
 
             EOSLIB_SERIALIZE(request, (id)(user_id)(images)(longitude)(latitude)(sample_name)(sample_category)
-                    (weight)(target_weight)(assigned_expert_num)(processed_expert_num)(assigned_experts)(processed_experts)(expert_notes)(status)
+                    (weight)(target_weight)(assigned_expert_num)(processed_expert_num)(assigned_experts)(processed_experts)(expert_notes)
+                    (final_name)(final_category)(status)
             )
         };
         typedef multi_index<N(request), request> request_table;

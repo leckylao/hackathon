@@ -6,7 +6,7 @@ set -x
 #contract=testnethhhhh
 #remote="-u http://47.75.115.225:8888"
 
-contract=hackathon115
+contract=hackathon222
 remote=""
 
 eosiocpp -g hackathon.abi hackathon.hpp
@@ -43,4 +43,4 @@ cleos ${remote} set contract ${contract} . hackathon.wast hackathon.abi -p ${con
 #while true; do cleos -u http://47.75.115.225:8888 push action testnetggggg dividepool '{"round_id":8}' -p alice1111111; sleep 1; done
 
 
-cleos push action eosio updateauth '["hackathon115","active","owner",{"threshold":1,"keys":[{"key":"EOS66BM6ghtyojnfmZKgGX9kADxVsbpPii65jCqaCPfD2cWYvvioS","weight":1}],"waits":[],"accounts":[{"weight":1,"permission":{"actor":"hackathon115","permission":"eosio.code"}}]}]' -p hackathon115
+cleos push action eosio updateauth '["hackathon222","active","owner",{"threshold":1,"keys":[{"key":"EOS66BM6ghtyojnfmZKgGX9kADxVsbpPii65jCqaCPfD2cWYvvioS","weight":1}],"waits":[],"accounts":[{"weight":1,"permission":{"actor":"hackathon222","permission":"eosio.code"}}]}]' -p hackathon222

@@ -41,6 +41,41 @@ namespace hackthon {
         eosio_assert(req_itr->status != 1, "request has not been finished processing.");
         eosio_assert(req_itr->status != 2, "request was rejected");
         eosio_assert(req_itr->status != 4, "rewards have been claimed");
+        eosio_assert(req_itr->status == 3, "rewards can not be claimed");
+
+        _requests.modify(req_itr, _self, [&](auto &r) {
+            auto en = req_itr->expert_notes;
+            map<string, int> counter_sample_name;
+            map<string, int> counter_category_name;
+            for (auto const &expert_note : en) {
+                if(expert_note.result > 0){
+                    counter_sample_name[expert_note.sample_name] += 1;
+                    counter_category_name[expert_note.sample_category] += 1;
+                }
+            }
+            int currentMax = 0;
+            string final_name = req_itr->sample_name;
+            for (auto it = counter_sample_name.cbegin(); it != counter_sample_name.cend(); ++it) {
+                if (it->second >= currentMax) {
+                    final_name = it->first;
+                    currentMax = it->second;
+                }
+            }
+
+            currentMax = 0;
+            string final_category = req_itr->sample_category;
+            for (auto it = counter_category_name.cbegin(); it != counter_category_name.cend(); ++it) {
+                if (it->second >= currentMax) {
+                    final_category = it->first;
+                    currentMax = it->second;
+                }
+            }
+
+            r.final_name = final_name;
+            r.final_category = final_category;
+
+        });
+
 
         INLINE_ACTION_SENDER(eosio::token, transfer)(N(eosio.token), {_self, N(active)},
                                                      {_self, client, asset(100000), "rewards for client"});
@@ -58,7 +93,7 @@ namespace hackthon {
         eosio_assert(req_itr != _requests.end(), "can not find request");
         eosio_assert(req_itr->status == 1, "request has finished processing");
 
-        note note = {expert, sample_name, sample_category, remark};
+        note note = {expert, result, sample_name, sample_category, remark};
 
         _requests.modify(req_itr, _self, [&](auto &r) {
             auto ae = r.assigned_experts;
@@ -77,7 +112,7 @@ namespace hackthon {
 
             r.expert_notes.emplace_back(note);
 
-            if ( r.weight >= r.target_weight) {
+            if (r.weight >= r.target_weight) {
                 r.status = 3;
             } else if (r.processed_expert_num == r.assigned_expert_num && r.weight < r.target_weight) {
                 r.status = 2;
